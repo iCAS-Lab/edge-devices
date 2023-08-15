@@ -10,7 +10,7 @@ The following instructions are for flashing a 4GB/2GB RAM Jetson Nano regardless
 
 ### Required Software
 
-It is **_HIGHLY_** recommended to use Docker to flash the Jetson Nano to avoid installing Ubuntu 18.04 which will be EOL in 2023. Docker isolates applications and operating systems from your host machine without much performance loss.
+It is **_HIGHLY_** recommended to use Docker to flash the Jetson Nano to avoid installing Ubuntu 18.04 which will be EOL in 2023. Docker isolates applications and/or operating systems from your host machine without much performance loss.
 
 Install the following software on your computer:
 
