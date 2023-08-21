@@ -36,6 +36,25 @@ To use the Docker image run the following command replacing `container_name` and
 docker run --privileged -v /dev/bus/usb:/dev/bus/usb --name container_name --hostname hostname -ti s7117/ubuntu-coraltpu
 ```
 
+## 3. Copying to/from Docker Container
+
+To copy a ML model or file(s) to the Docker container (i.e. named whatever you replaced `container_name` with in the above command) use the following command:
+
+```shell
+# This command copies a PyTorch model from the current directory on the
+# host computer into the container named container_name to the
+# /home/user directory
+docker cp ./model.pt container_name:/home/user
+```
+
+To copy a file from the Docker container use something like:
+
+```shell
+# This command copies a PyTorch model from the Docker container
+# to your home directory (~) on your host machine.
+docker cp container_name:/home/user/model.pt ~
+```
+
 # Using on Host
 
 If you would like to install the Coral Edge TPU dependencies and libaries on your local host machine, simply run the [setup.sh](./setup.sh) bash script.
