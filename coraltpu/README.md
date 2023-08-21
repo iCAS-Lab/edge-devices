@@ -15,6 +15,7 @@ It is **_HIGHLY_** recommended to use Docker to use the Coral Edge TPU to avoid 
 - The Coral Edge TPU comes in two primary form factors that are commercially available from [here](https://coral.ai/products/). We have validated the following process on the USB form factor, but the process for other form factors should be similar. You will need to purchase one of the following devices:
   - [USB Accelerator](https://coral.ai/products/accelerator)
   - [Dev Board](https://coral.ai/products/dev-board) - 1GB and 4GB memory options available.
+- Host computer with a CPU and a Linux-based OS installed.
 
 # Using via Docker (Recommened)
 
