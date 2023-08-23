@@ -69,16 +69,47 @@ For Raspberry Pi OS:
 
 If these don't work, then you can simply search for `default raspberry pi login` and you should get a list of options to try.
 
-6. Change your password (if not automatically prompted), grant sudo access, etc. Use the following command to change your user's password and root's password:'
+6. Change the default user's password (if not automatically prompted).
 
 ```shell
-passwd username # change the password for a username
-passwd root # change the password for root
-sudo usermod -aG sudo username # (OPTIONAL) give sudo access to a user
-passwd --lock root # (OPTIONAL) lock root account
+passwd default_username # change the password for a username
 ```
 
-7. Reboot the Raspberry Pi using `sudo reboot`.
+7. Lock the root account to disable login with root:
+
+```shell
+sudo passwd root --lock
+```
+
+8. Create a new user with sudo access:
+
+```shell
+sudo useradd -m new_username
+sudo usermod -aG sudo new_username
+```
+
+9. Logout of the default user using the `exit` command and then login with the new user you created and change the default shell to bash:
+
+```shell
+chsh -s /bin/bash
+```
+
+10. Delete the default user and its home directory:
+
+```shell
+sudo userdel /home/default_username
+sudo rm -rf /home/default_username
+```
+
+11. Connect the Raspberry Pi to the internet using an ethernet cable if you haven't already and update the system with:
+
+```shell
+sudo apt update
+sudo apt upgrade -y
+sudo apt autoremove --purge
+```
+
+12. Reboot the Raspberry Pi using `sudo reboot`.
 
 ## 3. Running Machine Learning Applications
 
@@ -111,3 +142,30 @@ To install LightDM and XFCE4 for your Raspberry Pi, run the following commands:
 4. `sudo dpkg-reconfigure lightdm` # Select lightdm
 5. `sudo apt install xfce4 xfce4-goodies` # Install XFCE4 GUI
 6. Reboot your machine and the GUI should show up asking for login credentials. Be sure to look for a button to select `XFCE Session` to select XFCE as your DE.
+
+### Setting Up a Simple Firewall
+
+**_NOTE: Installing a firewall is recommended to prevent unauthorized parties from accessing the Pi as well as lock down ports for incoming traffic. However, keep in mind this will affect services like SSH._**
+
+1. Install the Uncomplicated FireWall (UFW) via apt:
+
+```shell
+sudo apt install ufw
+```
+
+2. Enable the ufw service at startup and start the service.
+
+```shell
+sudo systemctl enable ufw
+sudo systemctl start ufw
+sudo ufw enable
+sudo ufw default deny
+```
+
+3. Allow any services, like SSH, through the firewall. For example:
+
+```shell
+sudo ufw allow 22 # 22 is the default port for SSH
+# OR
+sudo ufw allow ssh # This is an alternative way of allowing SSH
+```
