@@ -63,9 +63,15 @@ docker tag sdkmanager:VERSION-Ubuntu_18.04 sdkmanager:18.04
 
 2. If applicable, ensure that you have jumped the "DC Barrel Jack" jumper on your Jetson Nano board to allow the Jetson Nano to use the DC power supply.
 
-3. While keeping the `GND` and `FC REC` pins jumped, power on the device by connecting the micro-USB to USB-A port to your computer AND connecting the power supply to the barrel jack on the Jetson Nano.
+3. If applicable, insert a microSD card into the microSD card slot located under the daughter board under the headsink.
 
-4. Run the `lsusb` command inside your Linux terminal and you should see output similar to:
+4. Connect the Jetson Nano to a monitor.
+
+5. Connect a keyboard and mouse to the Jetson Nano.
+
+6. While keeping the `GND` and `FC REC` pins jumped, power on the device by connecting the micro-USB to USB-A port to your computer AND connecting the power supply to the barrel jack on the Jetson Nano.
+
+7. Run the `lsusb` command inside your Linux terminal and you should see output similar to:
 
 ```
 Bus 001 Device 061: ID 0955:7020 NVIDIA Corp. APX
@@ -73,9 +79,7 @@ Bus 001 Device 061: ID 0955:7020 NVIDIA Corp. APX
 
 This means that your computer detects the Jetson Nano and it is ready to flash.
 
-5. Connect the Jetson Nano to a monitor.
-
-6. Connect a keyboard and mouse to the Jetson Nano.
+8. Disconnect the jumper cable that was connecting the `GND` and `FC REC` pins.
 
 ### 1.4 Flashing the Jetson Nano using SDK-Manager inside Docker
 
@@ -104,13 +108,13 @@ Login user code: REDACTED. (valid for: 10 minutes).
 
 ![SDK Manager Splash Screen](./assets/SDKManagerDockerSplash.png)
 
-4. Read the Privacy Notice Accept the subsequent license agreements and choose the options you would like. You may choose `No` for the Privacy Notice window and you MUST select `Yes` for the subsequent license agreement.
+4. Before navigating through the Privacy Notice and license agreements, keep in mind that the default software packages will be installed after a short timer UNLESS you press the 'spacebar' immediately after accepting the last license agreement. We recommend keeping the default selections so pressing any key is completely OPTIONAL. It is alright to allow the defaults to auto-install after the short timer expires or by pressing 'enter'. Now, read the Privacy Notice (you can choose `Yes` or `No`) and ACCEPT the subsequent license agreements.
 
-5. After accepting the license agreements, immediately press the 'spacebar'. This allows you to customize the software that will be downloaded for flashing the Jetson Nano. It is recommended that you keep the default selections (i.e. the `HOST COMPONENTS` and `TARGET COMPONENTS` selected) like below:
+5. After accepting the license agreements, you have a few seconds to press the 'spacebar' if you would like to customize your software. This is OPTIONAL. This allows you to customize the software that will be downloaded for flashing the Jetson Nano. It is recommended that you keep the default selections (i.e. the `HOST COMPONENTS` and `TARGET COMPONENTS` selected) like below:
 
 ![SDK Manager Default Selections](./assets/SDKManagerDefaultSelections.png)
 
-6. Press enter to begin downloading the software required for flashing the Jetson Nano device. Depending on your internet connection speed, this usually takes 1-2 hours.
+6. Press enter to begin downloading the software required for flashing the Jetson Nano device. Depending on your internet connection speed, this usually takes 1-2 hours. You may see some errors in the `Terminal Log` but these are normal as long as progress on the downloads is being made.
 
 7. While your software is downloading (or after it completes), run the following command inside of a second terminal on your computer to check that the Jetson Nano is detected within the Docker container:
 
@@ -128,11 +132,82 @@ Bus 001 Device 061: ID 0955:7020 NVidia Corp.
 
 ![SDK Manager Downloads Done](./assets/SDKManagerDownloadsDone.png)
 
-9. Flash the Jetson Nano with `Jetson OS`. Select `4. Manual Setup - Jetson Nano` from the `Options` list on the bottom left corner... FLASH While the OS is flashing you will probably see the monitor the Jetson Nano is connected to flash/reboot several times. This is normal.
+9. Click the `SDK Manager is about...` area and press enter to select `Options: XYZ/ABC | 1-8 | Recovery` to select your Jetson Nano in recovery mode. Flash the Jetson Nano with `Jetson OS` by selecting `4. Manual Setup - Jetson Nano` from the `Options` list on the bottom left corner.
 
-10. After the Jetson Nano has been flashed successfully you should see the following image. You will also notice that a setup dialog has appeared on the Jetson Nano's monitor to setup the Jetson Nano's OS. Follow the on-screen instructions to setup the Jetson Nano's OS and DO NOT FORGET the username and password you setup.
+10. Ensure Jetson Nano is powered via the barrel jack power supply AND connected to the PC via the USB cable. Press enter to continue when asked to `Continue?`.
 
-11. Install the `Jetson SDK Components`
+11. Select `Runtime` from the `OEM Configuration` list.
+
+12. While the OS is flashing you will probably see the monitor the Jetson Nano is connected to flash/reboot several times. This is normal. The full flashing process takes around ~20 minutes.
+
+13. After the Jetson Nano has been flashed successfully you should see the following image.
+
+![SDK Manager Flashed Nano Flashed](./assets/SDKManagerFlashed.png)
+
+14. You will also notice that a `System Configuration` dialog has appeared on the Jetson Nano's monitor to setup the Jetson Nano's OS. Keep the Jetson Nano attached to your host computer running the Docker container and then follow the on-screen instructions to setup the Jetson Nano's OS and DO NOT FORGET the username and password you setup.
+
+15. After setting up the Jetson Nano's OS, it will appear to reboot and land on a login screen. From here, you can proceed with installing the `Jetson SDK Components`. Like the previous picture of the screen `SDK Manager is about to install SDK...` select `1. Install` and press enter.
+
+16. When prompted to `Connect via` select `USB cable` and press enter.
+
+17. When prompted to `Choose a connected board below:` select the Jetson Nano in recovery mode and press enter.
+
+18. When prompted to `Enter SSH connect details to Jetson Nano modules:` select `IPv4` as the `IP type` and press enter.
+
+19. Leave the `IP address` as the default address of `192.168.55.1`.
+
+20. Enter the `Username` for the user you setup on the Jetson Nano and press enter.
+
+21. Enter the `Password` for the user you setup on the Jetson Nano and press enter.
+
+22. If you entered the credentials correctly, the Jetson SDK components should begin installing. This process can take ~1 hour. Note that you may see a couple of errors in the `Terminal Log`, but as long as the installation continues, this is normal.
+
+23. If all of the SDK Components were installed correctly you should see the following screen:
+
+![SDK Manager Complete](./assets/SDKManagerComplete.png)
+
+24. You have now successfully flashed your Jetson Nano. To exit the Docker container simply press the `CTRL` and `c` key on your keboard at the same time and confirm you wish to exit. You should see the following after you exit:
+
+```
+  ===== INSTALLATION COMPLETED SUCCESSFULLY. =====
+      - CUDA on Host: Up-to-date
+      - CUDA Cross Compile Package on Host: Up-to-date
+      - VisionWorks on Host: Up-to-date
+      - VPI on Host: Up-to-date
+      - Nsight Graphics: Up-to-date
+      - Nsight Systems: Up-to-date
+      - Drivers for Jetson: Up-to-date
+      - File System and OS: Up-to-date
+      - Flash Jetson Nano: Installed
+      - DateTime Target Setup: Installed
+      - CUDA Toolkit for L4T: Installed
+      - cuDNN on Target: Installed
+      - TensorRT on Target: Installed
+      - OpenCV on Target: Installed
+      - VisionWorks on Target: Installed
+      - VPI on Target: Installed
+      - NVIDIA Container Runtime with Docker integration (Beta): Installed
+      - Multimedia API: Installed
+      - Nsight Systems CLI: Installed
+
+  ===== Installation completed successfully - Total 19 components =====
+  ===== 11 succeeded, 0 failed, 8 up-to-date, 0 skipped =====
+```
+
+25. Now login into the Jetson Nano and reboot the device and you should be ready to use it.
+
+26. In the future, if you need to reflash your Jetson Nano you can simply run the following command and re-flash your Jetson Nano with the same process, except you will not have to wait for the software to download again. Be sure if you do need to reflash your Jetson Nano that you enter the Jetson Nano into recovery mode again.
+
+```shell
+docker start -ai JetPack_NX_Devkit
+```
+
+27. You can also save your docker container named `JetPack_NX_Devkit` as an image and a `.tar` file by running the following two commands:
+
+```shell
+docker commit JetPack_NX_Devkit jetpack_nx_devkit:flashed
+docker export jetpack_nx_devkit:flashed -o jetpack_nx_devkit.tar
+```
 
 ## 2. Using the Jetson Nano to Run ML Models
 
@@ -140,4 +215,20 @@ COMING SOON
 
 ## Appendix
 
-### A. Expanding Storage Space on the EMMC Jetson Nano
+### A. Post-Install Script (OPTIONAL)
+
+For deployment settings, you can OPTIONALLY use the [postinstall.sh](./postinstall.sh) script to turn off serveral services, update the OS, disable the GUI, install several dependencies, setup conda, setup ssh, and more.
+
+### B. Installing a Light-Weight GUI (OPTIONAL)
+
+There are many display managers (DMs) and desktop environments (DEs) available for Linux. Display managers simply display the GUI. Desktop environments are the GUI interface you use in Linux. Both are required to install and use a GUI. We will use light-weight options for the Jetson Nano since it is resource constrained: LightDM for the DM and XFCE4 for the DE.
+
+To install LightDM and XFCE4 for your Jetson Nano, run the following commands:
+
+1. `sudo apt update` # Updates APT package repos
+2. `sudo apt upgrade` # Upgrades all of the software
+3. `sudo apt install lightdm` # Install and Configure LightDM as default if asked.
+4. `sudo dpkg-reconfigure lightdm` # Select lightdm
+5. `sudo apt install xfce4 xfce4-goodies` # Install XFCE4 GUI
+6. `sudo systemctl set-default multi-user.target` # re-enables the GUI if you used the postinstall.sh script.
+7. Reboot your machine and the GUI should show up asking for login credentials. Be sure to look for a button to select `XFCE Session` to select XFCE as your DE.

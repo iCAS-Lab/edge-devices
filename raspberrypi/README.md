@@ -110,4 +110,4 @@ To install LightDM and XFCE4 for your Raspberry Pi, run the following commands:
 3. `sudo apt install lightdm` # Install and Configure LightDM as default if asked.
 4. `sudo dpkg-reconfigure lightdm` # Select lightdm
 5. `sudo apt install xfce4 xfce4-goodies` # Install XFCE4 GUI
-6. Reboot your machine and the GUI should show up asking for login credentials.
+6. Reboot your machine and the GUI should show up asking for login credentials. Be sure to look for a button to select `XFCE Session` to select XFCE as your DE.
