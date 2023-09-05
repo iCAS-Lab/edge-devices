@@ -114,3 +114,22 @@ Source: https://docs.openvino.ai/latest/openvino_inference_engine_tools_benchmar
 ## 4. Run and Convert Your Own Model
 
 To see an example of how to implement your own models, convert them for NCS2, and performing inference refer to [lenet.py](docker/lenet.py).
+
+## 5. Copying to/from Docker Container
+
+To copy a ML model or file(s) to the Docker container (i.e. named whatever you replaced `container_name` with in the above command) use the following command:
+
+```shell
+# This command copies a PyTorch model from the current directory on the
+# host computer into the container named container_name to the
+# /home/user directory
+docker cp ./model.pt container_name:/home/user
+```
+
+To copy a file from the Docker container use something like:
+
+```shell
+# This command copies a PyTorch model from the Docker container
+# to your home directory (~) on your host machine.
+docker cp container_name:/home/user/model.pt ~
+```
