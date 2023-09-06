@@ -34,8 +34,8 @@ VAL = 'test+train[{}%:{}%]'.format(str(TRAIN_PERC),str(TRAIN_PERC+VAL_PERC))
 TEST = 'test+train[{}%:]'.format(str(TRAIN_PERC+VAL_PERC))
 ################################################################################
 # Paths
-MODEL_OUT_DIR = os.path.join(os.path.abspath('..'), 'models')
-WORKING_DIR = os.path.join(os.path.abspath('..'),'data')
+MODEL_OUT_DIR = os.path.join(os.path.abspath('.'), 'models')
+WORKING_DIR = os.path.join(os.path.abspath('.'),'data')
 # Output filenames
 MODEL_NAME = 'lenet.h5'
 # Print the dirs
@@ -210,14 +210,14 @@ print('EVALUATION LATENCY: {}'.format(total_inference_time))
 print('EVALUATION LOSS: {}, EVALUATION ACC: {}'.format(loss,acc))
 ################################################################################
 # Save model as H5 file
-saved_model = tf.keras.models.load_model('/root/models/lenet.h5')
+saved_model = tf.keras.models.load_model('./models/lenet.h5')
 tf.saved_model.save(saved_model,'lenet')
 ################################################################################
 # Freeze the model
 # path of the directory where you want to save your model
 frozen_out_path = './'
 # name of the .pb file
-frozen_graph_filename = "inference_graph"
+frozen_graph_filename = os.path.join(frozen_out_path, "inference_graph.pb")
 # Convert Keras model to ConcreteFunction
 full_model = tf.function(lambda x: model(x))
 full_model = full_model.get_concrete_function(
@@ -238,12 +238,12 @@ print(frozen_func.outputs)
 # Save frozen graph to disk
 tf.io.write_graph(graph_or_graph_def=frozen_func.graph,
                   logdir=frozen_out_path,
-                  name=f"{frozen_graph_filename}.pb",
+                  name=frozen_graph_filename,
                   as_text=False)
 ################################################################################
 # Run the model optimizer on the model to prepare it for use on NCS2
 # The paths of the source and converted models
-model_path = Path("/root/models/inference_graph.pb")
+model_path = Path("./inference_graph.pb")
 ir_path = Path(model_path).with_suffix(".xml")
 
 # Construct the command for Model Optimizer
