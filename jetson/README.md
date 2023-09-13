@@ -232,3 +232,35 @@ To install LightDM and XFCE4 for your Jetson Nano, run the following commands:
 5. `sudo apt install xfce4 xfce4-goodies` # Install XFCE4 GUI
 6. `sudo systemctl set-default multi-user.target` # re-enables the GUI if you used the postinstall.sh script.
 7. Reboot your machine and the GUI should show up asking for login credentials. Be sure to look for a button to select `XFCE Session` to select XFCE as your DE.
+
+### C. Using External Drives
+There are two ways to use an external drive on the Jetson Nano: 1) move the home directory (_i.e._ /home) to the external drive or 2) use the external drives as the default OS to boot.
+
+#### C.1 Moving the Home Directory to an External Drive
+
+**_\*\*\*NOTE: The `movehome.sh` script is meant to document the commands to run to move the home directory to another drive. It is NOT meant to be run as a script._**
+
+See the instructions in the [movehome.sh](./movehome.sh) script for details on how to move the `/home` directory from being on the SD/EMMC drive to the external drive attached via USB.
+
+We based the [movehome.sh](./movehome.sh) script off of the instructions provided at: https://www.howtogeek.com/442101/how-to-move-your-linux-home-directory-to-another-hard-drive/
+
+#### C.2 Change the Default Boot Drive
+
+To change the boot drive you must configure the kernel boot parameters for Linux to point to another drive. To do this, you must first install an OS on the SD/EMMC drive of the Jetson Nano, boot into the OS on the SD/EMMC drive, copy the filesystem, and then change the boot parameters.
+
+These instructions were inspired by jetsonhacks/bootFromUSB, but they are *NOT* 1-to-1.
+Credit: https://github.com/jetsonhacks/bootFromUSB
+
+**WARNING: This may cause the device to slow down. For higher performance simply change the home directories of users to default to the USB storage device.**
+
+1. Connect USB/SSD to Jetson Nano.
+2. Erase and format your USB storage device to a GPT and EXT4 naming the Partition/Label 'APP'.
+3. Run `sudo fdisk -l` and find the partition of the EXT4 files-system on the USB storage device (assuming /dev/sda1 herein).
+4. `sudo mount /dev/sda1 /mnt`
+5. `sudo rsync -axHAWX --numeric-ids --info=progress2 --exclude=/proc / "/mnt"`
+6. `sudo blkid -o value -s PARTUUID /dev/sda1`
+7. `sudo cp /boot/extlinux/extlinux.conf ~/extlinux.conf.bak`
+8. Edit the extlinux.conf file using `sudo vi /boot/extlinux/extlinux.conf` located on the EMMC storage.
+9. Copy the 'primary' entry and paste it directly below the first 'primary' entry (i.e. duplicate the entry).
+10. Change the *second* entry you just copied to be named 'sdcard'.
+11. Modify the *first* entry and change `root=/dev/mmcblk0p1` to `root=PARTUUID=32a76e0a-9aa7-4744-9954-dfe6f353c6a7` replacing the long string with *YOUR* PARTUUID returned by step 6. Note the PARTUUID should be similar to `32a76e0a-9aa7-4744-9954-dfe6f353c6a7` in length.
