@@ -113,7 +113,7 @@ Source: https://docs.openvino.ai/latest/openvino_inference_engine_tools_benchmar
 
 ## 4. Run and Convert Your Own Model
 
-To see an example of how to implement your own models, convert them for NCS2, and performing inference refer to [lenet.py](docker/lenet.py).
+To see an example of how to implement your own models, convert them for NCS2, and performing inference refer to [lenet.py](./lenet.py).
 
 ## 5. Copying to/from Docker Container
 
