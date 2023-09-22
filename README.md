@@ -36,6 +36,33 @@ Theoretically, all of these devices should work independent of using Docker and 
 
 Many of the devices require sudo priveleges to install packages and to access the hardware directly. Thus, when running the docker image many of the commands use the `--priveleged` flag. **_Using this flag can have certain negative security implications._** Please use this with care.
 
+## Docker Cheat Sheet
+
+For basic docker CLI commands, users can refer to the [Docker Cheat Sheet](https://docs.docker.com/get-started/docker_cheatsheet.pdf).
+
+Here are a couple basic commands:
+```shell
+# Download a docker image from dockerhub.com
+docker pull <repo>/<image_name>:<tag>
+# List your local images
+docker images
+# List your local containers
+docker container ls -a
+# Run a docker image for the first time and create a named container
+docker run --name <desired_name> -ti <docker_image> <command_to_run_in_container>
+# Stop a docker container
+docker stop <container_name>
+# Start a docker container. ONLY RUN THIS ONCE
+docker start -ai <container_name>
+# Execute a command inside of the docker container
+docker exec -ti <container_name> <command>
+# Open a new bash shell in docker container
+docker exec -ti <container_name> /bin/bash
+# Copy between docker container and host
+docker cp <host_filepath> <container_name>:<container_path>
+docker cp <container_name>:<container_filepath> <host_path>
+```
+
 ## Installing Docker
 
 Use the instructions from Docker's official documentation to install docker on your computer.
