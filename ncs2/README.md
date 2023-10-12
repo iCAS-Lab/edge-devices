@@ -47,25 +47,15 @@ This command will pull the image from docker hub to your local machine.
 
 ## 2. Using the container
 
-To run the container the first time run:
-
-```shell
-docker run -it --rm openvino/ubuntu20_data_dev:latest
-```
-
-This command will enter you into a bash terminal. You should see that your terminal's prompt says `openvino@<hostname>:<path>$`. If you see this you have successfully ran the container and the container has launched an interactive bash terminal.
-
-You will notice that by default the container enters you into `/opt/intel/openvino_<year>.<version>/`. This is where the OpenVINO install is located.
-
-To pass in the device you simply need to pass in the device inside of the `docker run` command:
-
-_For example_:
-
-Use the following command exactly to use OpenVINO with NCS2:
+To launch the OpenVino container and pass in the device, you simply use the following `docker run` command:
 
 ```shell
 docker run -it -u 0 --name myriad --hostname openvinomyriad --device /dev/dri:/dev/dri --device-cgroup-rule='c 189:* rmw' -v /dev/bus/usb:/dev/bus/usb openvino/ubuntu20_data_dev:latest
 ```
+
+This command will enter you into a bash terminal. You should see that your terminal's prompt says `root@<hostname>:<path>$`. If you see this you have successfully ran the container and the container has launched an interactive bash terminal.
+
+You will notice that by default the container enters you into `/opt/intel/openvino_<year>.<version>/`. This is where the OpenVINO install is located.
 
 **_Note: Using the `--rm` flag when running the container deletes the container after exiting the run._**
 
@@ -73,33 +63,40 @@ Source: https://hub.docker.com/r/openvino/ubuntu20_data_dev
 
 ## 3. Test the OpenVINO Container
 
-The following link downloads the GoogleNet-v1, optimizes it, and runs it on the Intel NCS2.
+The following commands download the GoogleNet-v1, optimizes it, and runs it on the Intel NCS2.
 
 1. Update the system.
 
 ```shell
-sudo apt update -y && apt upgrade -y
+apt update -y && apt upgrade -y
 ```
 
-2. Locate the model downloader.
+2. Install usbutils and check that the `Intel Movidius MyriadX` device appears on the list:
+
+```shell
+apt install usbutils
+lsusb
+```
+
+3. Locate the model downloader.
 
 ```shell
 cd /opt/intel/openvino_2021.*/deployment_tools/open_model_zoo/tools/downloader
 ```
 
-3. Download a sample model
+4. Download a sample model
 
 ```shell
 python3 downloader.py --name googlenet-v1 -o ~
 ```
 
-4. Run the model optimizer.
+5. Run the model optimizer.
 
 ```shell
 python3 /opt/intel/openvino_2021.*/deployment_tools/model_optimizer/mo.py --input_model ~/public/googlenet-v1/googlenet-v1.caffemodel --data_type FP32 --output_dir ~
 ```
 
-5. Run the model on the NCS2.
+6. Run the model on the NCS2.
 
 ```shell
 python3 /opt/intel/openvino_2021/deployment_tools/tools/benchmark_tool/benchmark_app.py -m ~/googlenet-v1.xml -d MYRIAD -api async -i /opt/intel/openvino_2021.*/deployment_tools/demo/car.png -b 1
