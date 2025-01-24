@@ -108,11 +108,11 @@ Login user code: REDACTED. (valid for: 10 minutes).
 
 ![SDK Manager Splash Screen](./assets/SDKManagerDockerSplash.png)
 
-4. Before navigating through the Privacy Notice and license agreements, keep in mind that the default software packages will be installed after a short timer UNLESS you press the 'spacebar' immediately after accepting the last license agreement. We recommend keeping the default selections so pressing any key is completely OPTIONAL. It is alright to allow the defaults to auto-install after the short timer expires or by pressing 'enter'. Now, read the Privacy Notice (you can choose `Yes` or `No`) and ACCEPT the subsequent license agreements.
+4. Before navigating through the Privacy Notice and license agreements, keep in mind that the default software packages will be installed after a short timer UNLESS you press the 'spacebar' immediately after accepting the last license agreement. As of JetPack 4.6.6 the firmware for the Jetson Nano has been changed to disallow SD card booting/flashing. To enable SD card boot, we will need to flash the EMMC built onto the Jetson module with just the Jetson OS option. Keep this in mind in the next step. Be sure to press the space bar immediately after reading and accepting the privacy notice and End-User License Agreements (EULAs). Now, read the Privacy Notice (you can choose `Yes` or `No`) and ACCEPT the subsequent license agreements.
 
-5. After accepting the license agreements, you have a few seconds to press the 'spacebar' if you would like to customize your software. This is OPTIONAL. This allows you to customize the software that will be downloaded for flashing the Jetson Nano. It is recommended that you keep the default selections (i.e. the `HOST COMPONENTS` and `TARGET COMPONENTS` selected) like below:
+5. After accepting the license agreements, immediately press the 'spacebar' to customize your software. If you wish, you can customize the software you wish to install. In this case, we will DESELECT the default TARGET_COMPONENT packages checkbox so that we can install them later after flashing. Your screen should look like the following:
 
-![SDK Manager Default Selections](./assets/SDKManagerDefaultSelections.png)
+![Deselect Target Components](./assets/deselect_target_components.png)
 
 6. Press enter to begin downloading the software required for flashing the Jetson Nano device. Depending on your internet connection speed, this usually takes 1-2 hours. You may see some errors in the `Terminal Log` but these are normal as long as progress on the downloads is being made.
 
@@ -128,81 +128,227 @@ You should see similar output to the following if the Docker container can see t
 Bus 001 Device 061: ID 0955:7020 NVidia Corp.
 ```
 
-8. Continue waiting for the software to download if it has not finished. Once the software has finished downloading you should see a screen like:
+8. Once all of the HOST_COMPONENTS and TARGET_COMPONENTS have finished downloading, you should see the following screen:
 
-![SDK Manager Downloads Done](./assets/SDKManagerDownloadsDone.png)
+![Ready to Flash](./assets/ready_to_flash.png)
 
-9. Click the `SDK Manager is about...` area and press enter to select `Options: XYZ/ABC | 1-8 | Recovery` to select your Jetson Nano in recovery mode. Flash the Jetson Nano with `Jetson OS` by selecting `4. Manual Setup - Jetson Nano` from the `Options` list on the bottom left corner.
+9. For now, we are going to just leave this terminal alone and not select either option since we are going to flash the board using the command line.
 
-10. Ensure Jetson Nano is powered via the barrel jack power supply AND connected to the PC via the USB cable. Press enter to continue when asked to `Continue?`.
+10. To flash the board and install the software components, we are going to use the command line inside of the Docker container. This is done primarily because we need to modify the kernel to enable SD cards to be used/detected by the Jetson Nano.
 
-11. Select `Runtime` from the `OEM Configuration` list.
+11. To enter the Docker container and use its shell use the following command in a new terminal :
 
-12. While the OS is flashing you will probably see the monitor the Jetson Nano is connected to flash/reboot several times. This is normal. The full flashing process takes around ~20 minutes.
-
-13. After the Jetson Nano has been flashed successfully you should see the following image.
-
-![SDK Manager Flashed Nano Flashed](./assets/SDKManagerFlashed.png)
-
-14. You will also notice that a `System Configuration` dialog has appeared on the Jetson Nano's monitor to setup the Jetson Nano's OS. Keep the Jetson Nano attached to your host computer running the Docker container and then follow the on-screen instructions to setup the Jetson Nano's OS and DO NOT FORGET the username and password you setup.
-
-15. After setting up the Jetson Nano's OS, it will appear to reboot and land on a login screen. From here, you can proceed with installing the `Jetson SDK Components`. Like the previous picture of the screen `SDK Manager is about to install SDK...` select `1. Install` and press enter.
-
-16. When prompted to `Connect via` select `USB cable` and press enter.
-
-17. When prompted to `Choose a connected board below:` select the Jetson Nano in recovery mode and press enter.
-
-18. When prompted to `Enter SSH connect details to Jetson Nano modules:` select `IPv4` as the `IP type` and press enter.
-
-19. Leave the `IP address` as the default address of `192.168.55.1`.
-
-20. Enter the `Username` for the user you setup on the Jetson Nano and press enter.
-
-21. Enter the `Password` for the user you setup on the Jetson Nano and press enter.
-
-22. If you entered the credentials correctly, the Jetson SDK components should begin installing. This process can take ~1 hour. Note that you may see a couple of errors in the `Terminal Log`, but as long as the installation continues, this is normal.
-
-23. If all of the SDK Components were installed correctly you should see the following screen:
-
-![SDK Manager Complete](./assets/SDKManagerComplete.png)
-
-24. You have now successfully flashed your Jetson Nano. To exit the Docker container simply press the `CTRL` and `c` key on your keboard at the same time and confirm you wish to exit. You should see the following after you exit:
-
-```
-  ===== INSTALLATION COMPLETED SUCCESSFULLY. =====
-      - CUDA on Host: Up-to-date
-      - CUDA Cross Compile Package on Host: Up-to-date
-      - VisionWorks on Host: Up-to-date
-      - VPI on Host: Up-to-date
-      - Nsight Graphics: Up-to-date
-      - Nsight Systems: Up-to-date
-      - Drivers for Jetson: Up-to-date
-      - File System and OS: Up-to-date
-      - Flash Jetson Nano: Installed
-      - DateTime Target Setup: Installed
-      - CUDA Toolkit for L4T: Installed
-      - cuDNN on Target: Installed
-      - TensorRT on Target: Installed
-      - OpenCV on Target: Installed
-      - VisionWorks on Target: Installed
-      - VPI on Target: Installed
-      - NVIDIA Container Runtime with Docker integration (Beta): Installed
-      - Multimedia API: Installed
-      - Nsight Systems CLI: Installed
-
-  ===== Installation completed successfully - Total 19 components =====
-  ===== 11 succeeded, 0 failed, 8 up-to-date, 0 skipped =====
+```shell
+docker exec -ti JetPack_NX_Devkit /bin/bash
 ```
 
-25. Now login into the Jetson Nano and reboot the device and you should be ready to use it.
+12. Upon proper completion, you should be logged into the Docker container's shell and navigate around as the root user.
 
-26. In the future, if you need to reflash your Jetson Nano you can simply run the following command and re-flash your Jetson Nano with the same process, except you will not have to wait for the software to download again. Be sure if you do need to reflash your Jetson Nano that you enter the Jetson Nano into recovery mode again.
+13. Run the following commands to install the device-tree-compiler inside the Docker container:
+
+```shell
+sudo apt update
+sudo apt-get install device-tree-compiler
+```
+
+14. Now navigate to the following directory ensuring that you appropriately change the path based on the version of the SDK you are using:
+
+```shell
+cd ~/nvidia/nvidia_sdk/JetPack_4.6.6_Linux_JETSON_NANO_TARGETS/Linux_for_Tegra/kernel/dtb
+```
+
+15. Before we replace one of the compiled kernel files, we should back it up. Use the following command to back it up to our home directory:
+
+```shell
+sudo cp tegra210-p3448-0002-p3449-0000-b00.dtb ~/tegra210-p3448-0002-p3449-0000-b00.dtb.bak
+```
+
+16. Now we can de-compile the `.dtb` file which will convert it to a `.dts` file that we can edit using the following command:
+
+```shell
+sudo dtc -I dtb -O dts -o tegra210-p3448-0002-p3449-0000-b00.dts tegra210-p3448-0002-p3449-0000-b00.dtb
+```
+
+17. Ensure you have a text editor install inside the container to edit files or use VSCode along with the Docker extension to open files and edit them. You can use `sudo apt install vim` to install the VIM text editor.
+
+18. Now open the following file prepare to edit it in the next steps.
+
+```
+tegra210-p3448-0002-p3449-0000-b00.dts
+```
+
+19. Search for `sdhci@700b0400` or just `sdhci`. Once you have found it, find the following line under it and edit it accordingly:
+
+Change the status on line 5771 from "disabled" to "okay" ensuring you preserve consistent indentation:
+
+```
+status = "disabled"
+```
+
+to
+
+```
+status = "okay"
+```
+
+20. With the file still open, insert the following lines after line 5804 which corresponds to `mmc-ddr-1_8v;`. Be sure to preserve the indentation of the file.
+
+```
+cd-gpios = <0x5b 0xc2 0x0>;
+sd-uhs-sdr104;
+sd-uhs-sdr50;
+sd-uhs-sdr25;
+sd-uhs-sdr12;
+no-mmc;
+```
+
+After the change you should see the following lines:
+
+```
+...
+mmc-ddr-1_8v;
+cd-gpios = <0x5b 0xc2 0x0>;
+sd-uhs-sdr104;
+sd-uhs-sdr50;
+sd-uhs-sdr25;
+sd-uhs-sdr12;
+no-mmc;
+uhs-mask = <0x0>;
+...
+```
+
+21. Now save and close the file.
+
+22. Now that we have re-enabled the SD card, we can re-compile the `.dts` file into the needed `.dtb` file using the following command:
+
+```shell
+sudo dtc -I dts -O dtb -o tegra210-p3448-0002-p3449-0000-b00.dtb tegra210-p3448-0002-p3449-0000-b00.dts
+```
+
+23. Now we can flash the Jetson Nano. To do this, go up two directories to the following directory:
+
+```shell
+cd ~/nvidia/nvidia_sdk/JetPack_4.6_Linux_JETSON_NANO_TARGETS/Linux_for_Tegra/
+```
+
+24. Use the following command to flash the Jetson Nano while it is in recovery mode:
+
+```shell
+sudo ./flash.sh jetson-nano-emmc mmcblk0p1
+```
+
+25. If you get an error about the device not being in recovery mode, see step 1 in Section 1.3.
+
+26. After flashing, the Jetson Nano's screen should appear and should ask you to accept another EULA. Accept it and then following the instructions to create a user, set the hostname, and a password for the Jetson Nano. Be sure to remember this so that we can use it later.
+
+27. Now that the device has been flashed and a user has been setup, we can edit the boot order on the Jetson Nano to point to the SD card. You can either use a mouse and keyboard connected to the Jetson Nano to do this or you can use SSH.
+
+28. To SSH into the Jetson Nano use the following command with the username you setup on the Jetson along with the default IP address below:
+
+```shell
+ssh username@192.168.55.1
+```
+
+29. Now that you have access to the Jetson, plug the microSD card into the Jetson. We will now need to format the card.
+
+30. Use the following command to confirm that the SD card is detected as `/dev/mmcblk1`:
+
+```shell
+sudo fdisk -l
+```
+
+31. Confirm that the `/dev/mmcblk1` device shows the expected capacity of the microSD card you inserted.
+
+32. Now run the following command to wipe the filesystem of the SD card:
+
+```shell
+sudo wipefs -a /dev/mmcblk1
+```
+
+33. Now use fdisk to create the partitions on the SD card. Use the following command:
+
+```shell
+sudo fdisk /dev/mmcblk1
+```
+
+Now we will need to press the following keys in order while pressing enter after each key:
+
+```
+g # Use GPT for disk
+n # Press enter until the partition has been created.
+w # Write.
+```
+
+34. Now you should see the `/dev/mmcblk1p1` partition has been created.
+
+35. Now we need to format the partition so that we can use it. Use the following command:
+
+```shell
+sudo mkfs.ext4 /dev/mmcblk1p1
+```
+
+36. Once the formatting is complete can now mount the device. Use the following command:
+
+```shell
+sudo mount /dev/mmcblk1p1 /mnt
+```
+
+37. Now that we have formatted the SD card we need to change the boot order (i.e where the root filesystem to be booted is).
+
+38. To change where the root filesystem is located open `/boot/extlinux/extlinux.conf` file and change where the root file system is located.
+
+Change `root=/dev/mmcblk0p1` to `root=/dev/mmcblk1p1`. You should see the following after this change:
+
+```
+APPEND ${cbootargs} quiet root=/dev/mmcblk1p1
+```
+
+39. Now we need to copy the root filesystem from the EMMC to the SD card. Use the following command to do so ensuring there is a space between / and /mnt:
+
+```shell
+sudo cp -ax / /mnt
+```
+
+40. Once the copy has finished shutdown the Jetson using the following command:
+
+```shell
+sudo shutdown -h now
+```
+
+41. Ensure that the jumper wire for entering recover is REMOVED and turn the Jetson back on. You may see a lot of log messages when booting up the Jetson but this is fine.
+
+42. Once you see that the Jetson is back on at the login screen, SSH into the Jetson and ensure that you have booted to the SD card. You can see this by running the following command:
+
+```shell
+sudo df -h
+```
+
+43. If the SD card was booted, then you should see that the root filesystem i.e. `/dev/mmcblk1p1` is mounted on `/` like below:
+
+```
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/mmcblk1p1   59G   14G   42G  25% /
+```
+
+44. Now we can install the Jetson TARGET_COMPONENTS software. To do this open the SDK Manager UI again and choose `No, skip flashing` when asked if you wish to flash.
+
+![Ready to Flash](./assets/ready_to_flash.png)
+
+45. Afterwards, the SDK manager will ask you for the login credentials for the Jetson Nano to install the TARGET_COMPONENTS via SSH. Ensure that you choose the USB install option via IPv4. After selecting USB and IPv4, enter the username and password you setup for the Jetson Nano and the software will be installed over SSH to the Jetson Nano.
+
+46. Once the software TARGET_COMPONENTS have been installed exit the SDK Manager container by pressing `CRTL + C` and choosing to exit.
+
+47. Reboot the Jetson Nano using `sudo reboot`.
+
+#### Restarting/Saving the Docker Container
+
+48. In the future, if you need to re-flash your Jetson Nano you can simply run the following command and re-flash your Jetson Nano with the same process, except you will not have to wait for the software to download again. Be sure if you do need to re-flash your Jetson Nano that you enter the Jetson Nano into recovery mode again.
 
 ```shell
 docker start -ai JetPack_NX_Devkit
 ```
 
-27. You can also save your docker container named `JetPack_NX_Devkit` as an image and a `.tar` file by running the following two commands:
+49. You can also save your docker container named `JetPack_NX_Devkit` as an image and a `.tar` file by running the following two commands:
 
 ```shell
 docker commit JetPack_NX_Devkit jetpack_nx_devkit:flashed
@@ -211,7 +357,16 @@ docker export jetpack_nx_devkit:flashed -o jetpack_nx_devkit.tar
 
 ## 2. Using the Jetson Nano to Run ML Models
 
-COMING SOON
+TODO: Add more here.
+
+1. Use `trtexec` or a Python script to convert an `.onnx` model to TensorRT format i.e. `.trt`.
+
+2. Run the model using PyCUDA.
+
+## References
+
+Instruction to use SD cards with Jetson OS 4.6.6 were found:
+https://wiki.youyeetoo.com/en/JETSON_NANO/Firmwareupdate
 
 ## Appendix
 
@@ -234,6 +389,7 @@ To install LightDM and XFCE4 for your Jetson Nano, run the following commands:
 7. Reboot your machine and the GUI should show up asking for login credentials. Be sure to look for a button to select `XFCE Session` to select XFCE as your DE.
 
 ### C. Using External Drives
+
 There are two ways to use an external drive on the Jetson Nano: 1) move the home directory (_i.e._ /home) to the external drive or 2) use the external drives as the default OS to boot.
 
 #### C.1 Moving the Home Directory to an External Drive
@@ -248,7 +404,7 @@ We based the [movehome.sh](./movehome.sh) script off of the instructions provide
 
 To change the boot drive you must configure the kernel boot parameters for Linux to point to another drive. To do this, you must first install an OS on the SD/EMMC drive of the Jetson Nano, boot into the OS on the SD/EMMC drive, copy the filesystem, and then change the boot parameters.
 
-These instructions were inspired by jetsonhacks/bootFromUSB, but they are *NOT* 1-to-1.
+These instructions were inspired by jetsonhacks/bootFromUSB, but they are _NOT_ 1-to-1.
 Credit: https://github.com/jetsonhacks/bootFromUSB
 
 **WARNING: This may cause the device to slow down. For higher performance simply change the home directories of users to default to the USB storage device.**
@@ -262,5 +418,5 @@ Credit: https://github.com/jetsonhacks/bootFromUSB
 7. `sudo cp /boot/extlinux/extlinux.conf ~/extlinux.conf.bak`
 8. Edit the extlinux.conf file using `sudo vi /boot/extlinux/extlinux.conf` located on the EMMC storage.
 9. Copy the 'primary' entry and paste it directly below the first 'primary' entry (i.e. duplicate the entry).
-10. Change the *second* entry you just copied to be named 'sdcard'.
-11. Modify the *first* entry and change `root=/dev/mmcblk0p1` to `root=PARTUUID=32a76e0a-9aa7-4744-9954-dfe6f353c6a7` replacing the long string with *YOUR* PARTUUID returned by step 6. Note the PARTUUID should be similar to `32a76e0a-9aa7-4744-9954-dfe6f353c6a7` in length.
+10. Change the _second_ entry you just copied to be named 'sdcard'.
+11. Modify the _first_ entry and change `root=/dev/mmcblk0p1` to `root=PARTUUID=32a76e0a-9aa7-4744-9954-dfe6f353c6a7` replacing the long string with _YOUR_ PARTUUID returned by step 6. Note the PARTUUID should be similar to `32a76e0a-9aa7-4744-9954-dfe6f353c6a7` in length.

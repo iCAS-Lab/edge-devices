@@ -1,5 +1,7 @@
 # Edge ML Accelerators
 
+**_DISCLAIMER: This repository is not updated very frequently. Thus, some instructions may no longer apply._**
+
 This repository contains the code, scripts, and Dockerfiles for setting up different edge machine learning accelerators on different platforms.
 
 ## Required Software:
@@ -41,6 +43,7 @@ Many of the devices require sudo priveleges to install packages and to access th
 For basic docker CLI commands, users can refer to the [Docker Cheat Sheet](https://docs.docker.com/get-started/docker_cheatsheet.pdf).
 
 Here are a couple basic commands:
+
 ```shell
 # Download a docker image from dockerhub.com
 docker pull <repo>/<image_name>:<tag>
