@@ -325,17 +325,21 @@ Filesystem      Size  Used Avail Use% Mounted on
 
 43. Now we can install the Jetson TARGET_COMPONENTS software. To do this open the SDK Manager UI again and choose `No` when asked if you wish to flash.
 
-44. Afterwards, the SDK manager will ask you for the login credentials for the Jetson Nano to install the TARGET_COMPONENTS via SSH.
+44. Afterwards, the SDK manager will ask you for the login credentials for the Jetson Nano to install the TARGET_COMPONENTS via SSH. Ensure that you choose the USB install option via IPv4. After selecting USB and IPv4, enter the username and password you setup for the Jetson Nano and the software will be installed over SSH to the Jetson Nano.
 
----
+45. Once the software TARGET_COMPONENTS have been installed exit the SDK Manager container by pressing `CRTL + C` and choosing to exit.
 
-45. In the future, if you need to reflash your Jetson Nano you can simply run the following command and re-flash your Jetson Nano with the same process, except you will not have to wait for the software to download again. Be sure if you do need to reflash your Jetson Nano that you enter the Jetson Nano into recovery mode again.
+46. Reboot the Jetson Nano using `sudo reboot`.
+
+### Restarting/Saving the Docker Container
+
+47. In the future, if you need to re-flash your Jetson Nano you can simply run the following command and re-flash your Jetson Nano with the same process, except you will not have to wait for the software to download again. Be sure if you do need to re-flash your Jetson Nano that you enter the Jetson Nano into recovery mode again.
 
 ```shell
 docker start -ai JetPack_NX_Devkit
 ```
 
-27. You can also save your docker container named `JetPack_NX_Devkit` as an image and a `.tar` file by running the following two commands:
+48. You can also save your docker container named `JetPack_NX_Devkit` as an image and a `.tar` file by running the following two commands:
 
 ```shell
 docker commit JetPack_NX_Devkit jetpack_nx_devkit:flashed
@@ -344,7 +348,16 @@ docker export jetpack_nx_devkit:flashed -o jetpack_nx_devkit.tar
 
 ## 2. Using the Jetson Nano to Run ML Models
 
-COMING SOON
+TODO: Add more here.
+
+1. Use `trtexec` or a Python script to convert an `.onnx` model to TensorRT format i.e. `.trt`.
+
+2. Run the model using PyCUDA.
+
+## References
+
+Instruction to use SD cards with Jetson OS 4.6.6 were found:
+https://wiki.youyeetoo.com/en/JETSON_NANO/Firmwareupdate
 
 ## Appendix
 
