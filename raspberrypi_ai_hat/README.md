@@ -8,7 +8,7 @@ This project focuses on converting an **Ultralytics YOLO** model into **Hailo HE
 - Set up **Hailo AI Suite** for model conversion.
 - Install **Ultralytics** 
 
-### Step 1. **Install the Hailo AI Suite** using this link:  
+### Step 1. **Install the Hailo AI Suite** using this link (note: you must create an account and login to access the downloads):  
 🔗 [Hailo AI Suite Installation](https://hailo.ai/developer-zone/documentation/hailo-sw-suite-2025-04/?sp_referrer=suite/suite_install.html#docker-installation)
 
    
@@ -209,7 +209,7 @@ sudo apt install hailo-all
 
 ### Step 3: Execute your model on the AI Hat
 
-- You will need to create a text file that contains all of the labels for your model (refer to the coco.txt in the `picamera2/examples/hailo` folder guidance)
+- You will need to create a text file that contains all of the labels for your model (refer to the coco.txt in the `picamera2/examples/hailo` folder for guidance)
 
 - You will also need to move the `.hef` model you created earlier to your Pi.
 
