@@ -187,35 +187,35 @@ sudo apt install hailo-all
    - 🔗 [Raspberry Pi AI Overview](https://www.raspberrypi.com/documentation/computers/ai.html)  
 
 
-### Step 2: Set up the Raspberry Pi PiCamera2 Repo
+### Step 2: Set up Hailo Raspberry Pi 5 Examples
 
-- Clone the picamera2 repository for github or download the folder (you will need a to use detect.py inside the `examples/hailo` folder)
+- Clone the hailo-rpi5-examples repository from github or download the folder (you will need a to use detection.py inside the `basic_pipelines` folder)
 
   ```bash
   #!/bin/bash
-  git clone git@github:raspberrypi/picamera2
+  git clone git@github:hailo-ai/hailo-rpi5-examples
   ```
 
-- Once the `picamera2` repository is downloaded you can open a bash session change directories into the `picamera2/examples/hailo` folder in the repository.
+- Once the `hailo-rpi5-examples` repository is downloaded you can open a bash session change directories into the `basic_pipelines` folder in the repository.
 
 - Execute the following command to ensure the camera and all other requirements are set up:
 
   ```bash
   #!/bin/bash
-  python detect.py
+  python detection.py
   ```
   This will result in the execution of a yolov8n model pretrained on the coco dataset. You should see a the preview window with bounding boxes on recognized objects.
 
 
 ### Step 3: Execute your model on the AI Hat
 
-- You will need to create a text file that contains all of the labels for your model (refer to the coco.txt in the `picamera2/examples/hailo` folder for guidance)
+- You will need to create a JSON file that contains all of the labels for your model (refer to the barcode_labels.json in the `resources` folder for guidance)
 
-- You will also need to move the `.hef` model you created earlier to your Pi.
+- You will also need to move the `.hef` model you created earlier to your Raspberry Pi.
 
 - Once those files are in place you can run your model by executing the command below:
 
   ```bash
   #!/bin/bash
-  python detect.py --model <path to yolo.hef> --labels <path to labels.txt>
+  python basic_pipelines/detection.py --hef-path <path/to/your/model.hef>  --input usb --labels-json <path/to/your/labels.json>
   ```
