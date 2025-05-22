@@ -198,11 +198,11 @@ sudo apt install hailo-all
 
 - Once the `hailo-rpi5-examples` repository is downloaded you can open a bash session change directories into the `basic_pipelines` folder in the repository.
 
-- Execute the following command to ensure the camera and all other requirements are set up:
+- Execute the following command to install all of the dependecies and activate the environment and all other requirements are set up:
 
   ```bash
   #!/bin/bash
-  python detection.py
+  bash install.sh
   ```
   This will result in the execution of a yolov8n model pretrained on the coco dataset. You should see a the preview window with bounding boxes on recognized objects.
 
@@ -217,5 +217,6 @@ sudo apt install hailo-all
 
   ```bash
   #!/bin/bash
+  source setup_env.sh
   python basic_pipelines/detection.py --hef-path <path/to/your/model.hef>  --input usb --labels-json <path/to/your/labels.json>
   ```
